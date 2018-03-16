@@ -53,4 +53,13 @@ class CellManager
         return;
     }
 
+    /**
+     * Send 404 when method is unknown
+     */
+    public function wrongMethod() {
+        header("HTTP/1.0 404 Page Not Found");
+        echo "L'URL demander n'existe pas";
+        return;
+    }
+
 }
