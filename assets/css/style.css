@@ -7,15 +7,120 @@ body,
 .wrapper {
   display: flex;
   background-color: #1F2124;
+  position: relative;
 }
 .wrapper .sidebar,
 .wrapper .grid-container {
   height: 100vh;
 }
+.wrapper .toggle-sidebar-container {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 9;
+}
+.wrapper .toggle-sidebar-container.computer {
+  display: none;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar {
+  width: 2.4em;
+  height: 45px;
+  position: relative;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar span {
+  display: block;
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: white;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: 0.25s ease-in-out, background 0.25s;
+  -moz-transition: 0.25s ease-in-out, background 0.25s;
+  -o-transition: 0.25s ease-in-out, background 0.25s;
+  transition: 0.25s ease-in-out, background 0.25s;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar span:nth-child(1) {
+  top: 0px;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar span:nth-child(2),
+.wrapper .toggle-sidebar-container #toggle-sidebar span:nth-child(3) {
+  top: 14px;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar span:nth-child(4) {
+  top: 28px;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar.open span {
+  background: white;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar.open span:nth-child(1) {
+  top: 18px;
+  width: 0%;
+  left: 50%;
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar.open span:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar.open span:nth-child(3) {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.wrapper .toggle-sidebar-container #toggle-sidebar.open span:nth-child(4) {
+  top: 18px;
+  width: 0%;
+  left: 50%;
+}
 .wrapper .sidebar {
   background-color: #333030;
   width: 20%;
   border-right: 2px solid #F17F42;
+}
+.wrapper .sidebar.mobile-browser {
+  width: 100%;
+  border: none;
+  position: absolute;
+  top: -100vh;
+  left: 0;
+  right: 0;
+  -webkit-transition: top 0.2s;
+  -moz-transition: top 0.2s;
+  -ms-transition: top 0.2s;
+  -o-transition: top 0.2s;
+  transition: top 0.2s;
+}
+.wrapper .sidebar.mobile-browser.display {
+  top: 0;
+}
+.wrapper .sidebar.mobile-browser.landscape .sidebar-content {
+  padding: 0;
+}
+.wrapper .sidebar.mobile-browser.landscape .sidebar-content .menu p {
+  display: none;
+}
+.wrapper .sidebar.mobile-browser.landscape .sidebar-content .menu:not(:first-child) {
+  flex-flow: row;
+}
+.wrapper .sidebar.mobile-browser .sidebar-content .menu:last-child a:last-child {
+  display: none;
 }
 .wrapper .sidebar .sidebar-content {
   padding: 5% 2em;
@@ -45,7 +150,7 @@ body,
 .wrapper .sidebar .sidebar-content .menu a {
   text-align: center;
   padding: .7rem 1rem;
-  margin: .5em 0;
+  margin: .5em;
   background-color: #f4f5f9;
   color: #333030;
   border-radius: 5px;
@@ -70,6 +175,13 @@ body,
 .wrapper .grid-container {
   display: flex;
   width: 80%;
+}
+.wrapper .grid-container.mobile-browser {
+  width: 100%;
+}
+.wrapper .grid-container.mobile-browser.portrait .grid {
+  width: 95vw;
+  height: 95vw;
 }
 .wrapper .grid-container .grid {
   margin: auto;
