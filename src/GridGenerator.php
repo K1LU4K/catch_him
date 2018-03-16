@@ -96,6 +96,7 @@ class GridGenerator
      * @param int $difficulty
      */
     public function setDifficulty($difficulty) {
+        $difficulty = ($difficulty <= 0 || $difficulty >= 3) ? 2 : $difficulty ;
         $this->difficulty = $difficulty;
     }
 
@@ -103,6 +104,7 @@ class GridGenerator
      * @param int $size
      */
     public function setSize($size) {
+        $size = ($size != 8 && $size != 16 && $size != 32) ? 16 : $size ;
         $this->size = $size;
         $this->cells = $this->size * $this->size;
     }
