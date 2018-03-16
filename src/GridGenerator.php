@@ -85,6 +85,14 @@ class GridGenerator
 
     }
 
+    public function generateSizeUrl() {
+        return (! empty($_GET["difficulty"])) ? "?difficulty=" . $_GET['difficulty'] . "&grid-size=" : "?grid-size=";
+    }
+
+    public function generateDifficultyUrl() {
+        return (! empty($_GET["grid-size"])) ? "?grid-size=" . $_GET['grid-size'] . "&difficulty=" : "?difficulty=";
+    }
+
     /**
      * @return float|int
      */
@@ -96,7 +104,7 @@ class GridGenerator
      * @param int $difficulty
      */
     public function setDifficulty($difficulty) {
-        $difficulty = ($difficulty <= 0 || $difficulty >= 3) ? 2 : $difficulty ;
+        $difficulty = ($difficulty <= 0 || $difficulty > 3) ? 2 : $difficulty ;
         $this->difficulty = $difficulty;
     }
 
