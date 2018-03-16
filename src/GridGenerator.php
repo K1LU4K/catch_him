@@ -26,7 +26,7 @@ class GridGenerator
     /**
      * @return GridGenerator
      */
-    public function getInstance() {
+    public static function getInstance() {
         if (! isset(self::$_instance)) {
             self::$_instance = new GridGenerator();
         }
@@ -41,24 +41,28 @@ class GridGenerator
         switch ($this->difficulty) {
 
             case 1:
-                $this->time = 700;
+                $this->time = 0.7;
+                $ms = $this->time * 1000;
                 break;
 
             case 2:
-                $this->time = 500;
+                $this->time = 0.5;
+                $ms = $this->time * 1000;
                 break;
 
             case 3:
-                $this->time = 200;
+                $this->time = 0.2;
+                $ms = $this->time * 1000;
                 break;
 
             default:
-                $time = 500;
+                $this->time = 500;
+                $ms = $this->time * 1000;
                 break;
 
         }
 
-        echo "<div class=\"grid\" data-number-cell=\"{$this->cells}\" data-time-active=\"{$this->time}\">";
+        echo "<div class=\"grid\" data-difficulty=\"{$this->difficulty}\" data-grid-size=\"{$this->size}\" data-time-active=\"{$ms}\">";
 
         for ($x = 0 ; $x < $this->size ; $x++) {
 
@@ -100,6 +104,7 @@ class GridGenerator
      */
     public function setSize($size) {
         $this->size = $size;
+        $this->cells = $this->size * $this->size;
     }
 
     /**

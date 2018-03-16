@@ -7,24 +7,11 @@ class CellManager
 
     public $oGrid;
 
-    public static $_instance;
-
     /**
      * CellManager constructor.
-     * @param GridGenerator $grid
      */
-    public function __construct(GridGenerator $grid) {
-        $this->oGrid = $grid;
-    }
-
-    /**
-     * @return CellManager
-     */
-    public function getInstance() {
-        if (! isset(self::$_instance)) {
-            self::$_instance = new CellManager(\K1LU4K\GridGenerator::getInstance());
-        }
-        return self::$_instance;
+    public function __construct(GridGenerator $oGrid) {
+        $this->oGrid = $oGrid;
     }
 
     /**
@@ -56,6 +43,7 @@ class CellManager
      * Choose a random cell to active
      */
     public function activeRandomCell() {
+
         $iIdCell = rand(0, $this->oGrid->getCells() - 1);
 
         $_SESSION['timeout'] = time() + $this->oGrid->getTime();

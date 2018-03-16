@@ -5,6 +5,8 @@
 
     // Variables for grid and get time difficulty
     let grid = document.querySelector(".grid"),
+        difficulty = grid.dataset.difficulty,
+        gridSize = grid.dataset.gridSize,
         timeActive = grid.dataset.timeActive,
         timeBetweenChange = parseInt(timeActive) + 1000;
 
@@ -12,7 +14,8 @@
     let cell,
         cellId,
         changeCell,
-        makeCellDisapear;
+        makeCellDisappear,
+        TimeoutCellWinnable;
 
     let xhr = new XMLHttpRequest();
 
@@ -26,8 +29,7 @@
          * @type {number}
          */
         changeCell = setInterval(function () {
-
-            xhr.open("GET", "?ajax=true&cell=change");
+            xhr.open("GET", "?difficulty=" + difficulty + "&grid-size=" + gridSize + "&ajax=true&cell=change");
 
             xhr.onload = function() {
 
@@ -38,15 +40,16 @@
                     cell.classList.add("active");
 
                     // Timeout to disable winnable cell
-                    makeCellDisapear = setTimeout(function () {
+                    makeCellDisappear = setTimeout(function () {
                         cell.classList.remove('active');
-                        clearTimeout(makeCellDisapear);
+                        clearTimeout(makeCellDisappear);
                     }, timeActive);
 
                     // Add click event to make the cell winnable
-                    cell.addEventListener("click", makeWinnable, {
-                        once: true
-                    });
+                    cell.addEventListener("mousedown", makeWinnable);
+                    TimeoutCellWinnable = setTimeout(function () {
+                        cell.removeEventListener("mousedown", makeWinnable);
+                    }, timeActive);
 
                 }
                 else {
@@ -57,7 +60,6 @@
             };
 
             xhr.send();
-
         }, timeBetweenChange);
 
     }
@@ -69,22 +71,34 @@
     let makeWinnable = function (event) {
         event.preventDefault();
 
-        xhr.open("GET", "?ajax=true&cell=isWinner&cellId=" + cellId);
+        let thisCell = this,
+            clickedCellId = thisCell.id;
+
+        xhr.open("GET", "?ajax=true&cell=isWinner&cellId=" + clickedCellId);
 
         xhr.onload = function () {
 
             if (xhr.status === 200) {
+
                 start.innerText = "Play ?";
+
                 start.addEventListener("click", startGame, { once:true });
+
                 alert(xhr.responseText);
+
                 clearInterval(changeCell);
-                clearTimeout(makeCellDisapear);
-                this.removeEventListener("click", makeWinnable);
+
+                clearTimeout(makeCellDisappear);
+                clearTimeout(TimeoutCellWinnable);
+
+                thisCell.classList.remove("active");
+                thisCell.removeEventListener("click", makeWinnable);
+
             }
             else {
                 alert('Une erreur est survenu, sorry.');
                 clearInterval(changeCell);
-                clearTimeout(makeCellDisapear);
+                clearTimeout(makeCellDisappear);
             }
 
         }

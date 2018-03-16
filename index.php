@@ -4,7 +4,6 @@ session_start();
 require "vendor/autoload.php";
 
 $oGridGen = \K1LU4K\GridGenerator::getInstance();
-$oCellMan = \K1LU4K\CellManager::getInstance();
 
 $sDifficultyUrl = (! empty($_GET["grid-size"])) ? "?grid-size=" . $_GET['grid-size'] . "&difficulty=" : "?difficulty=";
 $sSizeUrl = (! empty($_GET["difficulty"])) ? "?difficulty=" . $_GET['difficulty'] . "&grid-size=" : "?grid-size=";
@@ -19,6 +18,8 @@ if (! empty($_GET["grid-size"])) {
     $oGridGen->setSize($iGridSize);
 }
 
+$oCellMan = new \K1LU4K\CellManager($oGridGen);
+
 // Get ajax request
 if (! empty($_GET['cell']) && ! empty($_GET['ajax'])) {
 
@@ -29,7 +30,7 @@ if (! empty($_GET['cell']) && ! empty($_GET['ajax'])) {
 
         // If method is "change", change the
         if ($_GET['cell'] == "change") {
-            $oCellMan->activeRandomCell(2);
+            $oCellMan->activeRandomCell();
         }
 
         if ($_GET["cell"] == "isWinner") {
