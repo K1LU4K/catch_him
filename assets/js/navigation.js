@@ -15,13 +15,9 @@
 
         toggleSidebar.addEventListener("click", function (event) {
             event.preventDefault();
-            toggleMenu();
+            toggleSidebar.classList.toggle("open");
+            sidebar.classList.toggle("display");
         });
-
-        startButton.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleMenu();
-        }, { once: true });
 
     }
 
@@ -51,11 +47,6 @@
             gridContainer.classList.remove("mobile-browser");
             toggleSidebarContainer.classList.add("computer");
         }
-    }
-
-    function toggleMenu() {
-        toggleSidebar.classList.toggle("open");
-        sidebar.classList.toggle("display");
     }
 
 })();
