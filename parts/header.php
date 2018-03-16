@@ -19,6 +19,15 @@
 
 <div class="wrapper">
 
+    <div class="toggle-sidebar-container computer">
+        <div id="toggle-sidebar" data-toggle="sidebar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
     <div class="sidebar">
 
         <div class="sidebar-content">
