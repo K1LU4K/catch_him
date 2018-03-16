@@ -1,16 +1,36 @@
 <?php
 
-namespace K1LU4K\Generator;
+namespace K1LU4K;
 
 
 class GridGenerator
 {
 
     protected $size;
+    protected $cells;
+    protected $difficulty;
+    protected $time;
 
-    public function __construct($size = 16) {
-        $this->size = $size;
-        $this->cells = $size * $size;
+    public static $_instance;
+
+    /**
+     * GridGenerator constructor.
+     */
+    public function __construct() {
+        $this->size = 16;
+        $this->difficulty = 2;
+        $this->time = 500;
+        $this->cells = $this->size * $this->size;
+    }
+
+    /**
+     * @return GridGenerator
+     */
+    public function getInstance() {
+        if (! isset(self::$_instance)) {
+            self::$_instance = new GridGenerator();
+        }
+        return self::$_instance;
     }
 
     /**
@@ -18,7 +38,27 @@ class GridGenerator
      */
     public function generate() {
 
-        echo "<div class=\"grid\" data-number-cell=\"{$this->cells}\">";
+        switch ($this->difficulty) {
+
+            case 1:
+                $this->time = 700;
+                break;
+
+            case 2:
+                $this->time = 500;
+                break;
+
+            case 3:
+                $this->time = 200;
+                break;
+
+            default:
+                $time = 500;
+                break;
+
+        }
+
+        echo "<div class=\"grid\" data-number-cell=\"{$this->cells}\" data-time-active=\"{$this->time}\">";
 
         for ($x = 0 ; $x < $this->size ; $x++) {
 
@@ -41,8 +81,47 @@ class GridGenerator
 
     }
 
-    public function getActive() {
-        echo rand(0, $this->cells - 1);
+    /**
+     * @return float|int
+     */
+    public function getCells() {
+        return $this->cells;
+    }
+
+    /**
+     * @param int $difficulty
+     */
+    public function setDifficulty($difficulty) {
+        $this->difficulty = $difficulty;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize($size) {
+        $this->size = $size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize() {
+        return $this->size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDifficulty() {
+        return $this->difficulty;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 
 }
