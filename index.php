@@ -58,6 +58,8 @@ if (! empty($_GET['cell']) && ! empty($_GET['ajax'])) {
 
     <title>Catch Him</title>
 
+    <link rel="icon" href="./favicon.ico">
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/normalize.css">
     <link rel="stylesheet" href="./assets/css/style.css">
