@@ -1,7 +1,9 @@
 (function () {
 
     // Variable for sidebar button
-    let start = document.getElementById("start-game");
+    let start = document.getElementById("start-game"),
+        toggleSidebar = document.getElementById("toggle-sidebar"),
+        sidebar = document.querySelector("." + toggleSidebar.dataset.toggle);
 
     // Variables for grid and get time difficulty
     let grid = document.querySelector(".grid"),
@@ -19,10 +21,19 @@
 
     let xhr = new XMLHttpRequest();
 
+    /**
+     * Start the game
+     * @param event
+     */
     let startGame = function (event) {
         event.preventDefault();
 
         this.innerText = "Stop ?";
+
+        if (mobileAndTabletcheck()) {
+            toggleSidebar.classList.toggle("open");
+            sidebar.classList.toggle("display");
+        }
 
         /**
          * Interval for changing winnable cell change
