@@ -1,3 +1,104 @@
-.coucou {
-  color: red;
+html,
+body,
+.wrapper {
+  height: 100vh;
+  width: 100vw;
+}
+.wrapper {
+  display: flex;
+  background-color: #1F2124;
+}
+.wrapper .sidebar,
+.wrapper .grid-container {
+  height: 100vh;
+}
+.wrapper .sidebar {
+  background-color: #333030;
+  width: 20%;
+  border-right: 2px solid #F17F42;
+}
+.wrapper .sidebar .sidebar-content {
+  padding: 5% 2em;
+  height: 90%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.wrapper .sidebar .sidebar-content .menu {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+.wrapper .sidebar .sidebar-content .menu:not(:first-child),
+.wrapper .sidebar .sidebar-content .menu:not(:first-child) a {
+  width: 90%;
+}
+.wrapper .sidebar .sidebar-content .menu * {
+  font-family: 'Montserrat', sans-serif;
+}
+.wrapper .sidebar .sidebar-content .menu p,
+.wrapper .sidebar .sidebar-content .menu h1 {
+  text-align: center;
+  color: #f4f5f9;
+}
+.wrapper .sidebar .sidebar-content .menu a {
+  text-align: center;
+  padding: .7rem 1rem;
+  margin: .5em 0;
+  background-color: #f4f5f9;
+  color: #333030;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1.2em;
+  -webkit-transition: color 0.1s, background-color 0.1s;
+  -moz-transition: color 0.1s, background-color 0.1s;
+  -ms-transition: color 0.1s, background-color 0.1s;
+  -o-transition: color 0.1s, background-color 0.1s;
+  transition: color 0.1s, background-color 0.1s;
+}
+.wrapper .sidebar .sidebar-content .menu a.disable,
+.wrapper .sidebar .sidebar-content .menu a.disable:hover {
+  color: #77786e;
+  background-color: #C5C6B6;
+}
+.wrapper .sidebar .sidebar-content .menu a:hover,
+.wrapper .sidebar .sidebar-content .menu a.active {
+  color: white;
+  background-color: #F17F42;
+}
+.wrapper .grid-container {
+  display: flex;
+  width: 80%;
+}
+.wrapper .grid-container .grid {
+  margin: auto;
+  width: 95vh;
+  height: 95vh;
+  display: table;
+  border-radius: 5px;
+  border: 2px solid #383A3F;
+  background-color: #383A3F;
+}
+.wrapper .grid-container .grid .line {
+  display: table-row;
+  border-bottom: 3px solid #383A3F;
+}
+.wrapper .grid-container .grid .line:last-child {
+  border-bottom: none;
+}
+.wrapper .grid-container .grid .line .cell {
+  display: table-cell;
+  border: 2px solid #383a3f;
+  border-radius: 5px;
+  background-color: #1F2124;
+  -webkit-transition: color 50ms;
+  -moz-transition: color 50ms;
+  -ms-transition: color 50ms;
+  -o-transition: color 50ms;
+  transition: color 50ms;
+}
+.wrapper .grid-container .grid .line .cell.active {
+  background-color: rgba(255, 196, 98, 0.8);
+  cursor: pointer;
 }
