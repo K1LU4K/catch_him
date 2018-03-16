@@ -7,35 +7,46 @@
 
     let startButton = document.getElementById("start-game");
 
-    if (mobileAndTabletcheck()) {
+    addMobileStyle();
 
-        window.addEventListener("deviceorientation", function () {
+    window.addEventListener("resize", addMobileStyle);
 
-            if (window.innerHeight > window.innerWidth) {
-                gridContainer.classList.add("portrait");
-                sidebar.classList.remove("landscape");
-            }
-            else {
-                gridContainer.classList.remove("portrait");
-                sidebar.classList.add("landscape");
-            }
+    function addMobileStyle() {
+        if (mobileAndTabletcheck()) {
 
-        });
+            window.addEventListener("deviceorientation", function () {
 
-        sidebar.classList.add("mobile-browser");
-        gridContainer.classList.add("mobile-browser");
-        toggleSidebarContainer.classList.remove("computer");
+                if (window.innerHeight > window.innerWidth) {
+                    gridContainer.classList.add("portrait");
+                    sidebar.classList.remove("landscape");
+                }
+                else {
+                    gridContainer.classList.remove("portrait");
+                    sidebar.classList.add("landscape");
+                }
 
-        toggleSidebar.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleMenu();
-        });
+            });
 
-        startButton.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleMenu();
-        }, { once: true });
+            sidebar.classList.add("mobile-browser");
+            gridContainer.classList.add("mobile-browser");
+            toggleSidebarContainer.classList.remove("computer");
 
+            toggleSidebar.addEventListener("click", function (event) {
+                event.preventDefault();
+                toggleMenu();
+            });
+
+            startButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                toggleMenu();
+            }, { once: true });
+
+        }
+        else {
+            sidebar.classList.remove("mobile-browser");
+            gridContainer.classList.remove("mobile-browser");
+            toggleSidebarContainer.classList.add("computer");
+        }
     }
 
     function toggleMenu() {
