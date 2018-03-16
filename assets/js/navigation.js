@@ -11,6 +11,20 @@
 
     window.addEventListener("resize", addMobileStyle);
 
+    if (mobileAndTabletcheck()) {
+
+        toggleSidebar.addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleMenu();
+        });
+
+        startButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleMenu();
+        }, { once: true });
+
+    }
+
     function addMobileStyle() {
         if (mobileAndTabletcheck()) {
 
@@ -31,23 +45,12 @@
             gridContainer.classList.add("mobile-browser");
             toggleSidebarContainer.classList.remove("computer");
 
-            toggleSidebar.addEventListener("click", function (event) {
-                event.preventDefault();
-                toggleMenu();
-            });
-
-            startButton.addEventListener("click", function (event) {
-                event.preventDefault();
-                toggleMenu();
-            }, { once: true });
-
         }
         else {
             sidebar.classList.remove("mobile-browser");
             gridContainer.classList.remove("mobile-browser");
             toggleSidebarContainer.classList.add("computer");
         }
-
     }
 
     function toggleMenu() {
