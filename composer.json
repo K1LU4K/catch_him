@@ -1,0 +1,16 @@
+{
+    "name": "jet_black/catch_him",
+    "description": "Little game where you try to hit the light",
+    "authors": [
+        {
+            "name": "Gautier",
+            "email": "gautier.dujarrier@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "K1LU4K\\": "src/"
+        }
+    },
+    "require": {}
+}
