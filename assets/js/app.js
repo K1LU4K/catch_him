@@ -5,7 +5,6 @@ window.mobileAndTabletcheck = function() {
 };
 
 (function () {
-
     // Variable for sidebar button
     let start = document.getElementById("start-game"),
         toggleSidebar = document.getElementById("toggle-sidebar"),
@@ -13,12 +12,20 @@ window.mobileAndTabletcheck = function() {
         toggleSidebarContainer = document.querySelector(".toggle-sidebar-container"),
         gridContainer = document.querySelector(".grid-container");
 
+    // Button for difficulty and grid-size
+    let difficultyButtons = document.querySelectorAll(".menu.difficulty a"),
+        gridSizeButtons = document.querySelectorAll(".menu.grid-size a"),
+        nbrDifficultyButtons = difficultyButtons.length,
+        nbrGridSizeButtons = gridSizeButtons.length,
+        url;
+
     // Variables for grid and get time difficulty
     let grid = document.querySelector(".grid"),
         difficulty = grid.dataset.difficulty,
         gridSize = grid.dataset.gridSize,
         timeActive = grid.dataset.timeActive,
-        timeBetweenChange = parseInt(timeActive) + 1000;
+        timeBetweenChange = parseInt(timeActive) + 1000,
+        availableGridSize = JSON.parse(grid.dataset.availableGridSize);
 
     // Variables for cell and win cell
     let cell,
@@ -30,18 +37,25 @@ window.mobileAndTabletcheck = function() {
 
     let xhr = new XMLHttpRequest();
 
-    start.addEventListener("click", startGame, { once: true });
+    start.addEventListener("click", startGameEvent, { once: true });
 
     // Event and function for mobile style
     addMobileStyleEvent();
     window.addEventListener("resize", addMobileStyleEvent);
 
+    for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
+        difficultyButtons[i].addEventListener("click", changeDifficultyEvent);
+    }
+
+    for (let i = 0 ; i < nbrGridSizeButtons ; i++) {
+        gridSizeButtons[i].addEventListener("click", changeGridSizeEvent);
+    }
 
     /**
      * Function for the click event in play buton, start the game
      * @param event
      */
-    function startGame(event) {
+    function startGameEvent(event) {
         event.preventDefault();
 
         winCell = document.querySelector(".win");
@@ -50,6 +64,7 @@ window.mobileAndTabletcheck = function() {
         }
 
         this.innerText = "Stop ?";
+        this.addEventListener("click", stopGameEvent, { once: true });
 
         if (mobileAndTabletcheck()) {
             toggleSidebar.classList.toggle("open");
@@ -63,7 +78,7 @@ window.mobileAndTabletcheck = function() {
         changeCell = setInterval(function () {
 
             xhr.open("GET", "?difficulty=" + encodeURIComponent(difficulty) + "&grid-size=" + encodeURIComponent(gridSize) + "&ajax=true&cell=change");
-            xhr.onload = setRandomCell;
+            xhr.onload = setRandomCellResponse;
             xhr.send();
 
             }, timeBetweenChange);
@@ -71,17 +86,34 @@ window.mobileAndTabletcheck = function() {
     }
 
     /**
+     * Function for stop the game, use one event for stop click button
+     */
+    function stopGameEvent(event) {
+        event.preventDefault();
+
+        removeActiveCell();
+
+        start.innerText = "Play ?";
+        start.addEventListener("click", startGameEvent, { once: true });
+
+        clearInterval(changeCell);
+        clearTimeout(makeCellDisappear);
+        clearTimeout(TimeoutCellWinnable);
+
+    }
+
+    /**
      * Function for the click event in the cell winnable
      * @param event
      */
-    function makeWinnable(event) {
+    function makeWinnableEvent(event) {
         event.preventDefault();
 
         var clickedCellId = cell.id;
 
         xhr.open("GET", "?ajax=true&cell=isWinner&cellId=" + encodeURIComponent(clickedCellId));
 
-        xhr.onload = checkIfWin;
+        xhr.onload = checkIfWinResponse;
 
         xhr.send();
 
@@ -90,7 +122,7 @@ window.mobileAndTabletcheck = function() {
     /**
      * Function for XMLHttpRequest.onload method, get a random cell form the database and active it during x millisecondes
      */
-    function setRandomCell() {
+    function setRandomCellResponse() {
 
         if (xhr.readyState == XMLHttpRequest.DONE) {
 
@@ -108,9 +140,9 @@ window.mobileAndTabletcheck = function() {
                 }, timeActive);
 
                 // Add click event to make the cell winnable
-                cell.addEventListener("mousedown", makeWinnable);
+                cell.addEventListener("mousedown", makeWinnableEvent);
                 TimeoutCellWinnable = setTimeout(function () {
-                    cell.removeEventListener("mousedown", makeWinnable);
+                    cell.removeEventListener("mousedown", makeWinnableEvent);
                     clearTimeout(TimeoutCellWinnable);
                 }, timeActive);
 
@@ -127,17 +159,18 @@ window.mobileAndTabletcheck = function() {
     /**
      * Function for XMLHttpRequest.onload method, check if the user win and stop the game
      */
-    function checkIfWin() {
+    function checkIfWinResponse() {
 
         if (xhr.readyState == XMLHttpRequest.DONE) {
 
             if (xhr.status === 200) {
 
-                cell.removeEventListener("mousedown", makeWinnable);
+                cell.removeEventListener("mousedown", makeWinnableEvent);
 
                 start.innerText = "Play ?";
 
-                start.addEventListener("click", startGame, { once:true });
+                start.removeEventListener("click", stopGameEvent);
+                start.addEventListener("click", startGameEvent, { once:true });
 
                 cell.classList.remove("active");
                 cell.classList.add("win");
@@ -208,6 +241,105 @@ window.mobileAndTabletcheck = function() {
             sidebar.classList.add("landscape");
         }
 
+    }
+
+    /**
+     * Function for change difficulty event
+     */
+    function changeDifficultyEvent(event) {
+        stopGameEvent(event);
+
+        let thisButton = this;
+
+        url = this.getAttribute("href");
+
+        xhr.open("GET", url + "&ajax=true");
+
+        xhr.onload = () => { changeOptionResponse(".difficulty-button.active", thisButton); };
+
+        xhr.send();
+
+    }
+
+    /**
+     * Function for change grid-size event
+     */
+    function changeGridSizeEvent(event) {
+        stopGameEvent(event);
+
+        let thisButton = this;
+
+        url = this.getAttribute("href");
+
+        xhr.open("GET", url + "&ajax=true");
+
+        xhr.onload = () => { changeOptionResponse(".grid-size-button.active", thisButton); };
+
+        xhr.send();
+
+    }
+
+    /**
+     * Function for change the active menu button and regenerate grid
+     * @param activeButtonSelector
+     */
+    function changeOptionResponse(activeButtonSelector, thisButton) {
+
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+
+            if (xhr.status === 200) {
+                let response = JSON.parse(xhr.responseText),
+                    activeButton = document.querySelector(activeButtonSelector);
+
+                activeButton.classList.remove("active");
+                thisButton.classList.add("active");
+
+                refreshGrid(response.grid);
+
+                if (activeButtonSelector.match("difficulty")) {
+                    for (let i = 0 ; i < nbrGridSizeButtons ; i++) {
+                        gridSizeButtons[i].setAttribute("href", response.sizeUrl + availableGridSize[i]);
+                    }
+                }
+                else {
+                    for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
+                        difficultyButtons[i].setAttribute("href", response.difficultyUrl + (i + 1));
+                    }
+                }
+
+            }
+            else {
+                alert("An error is occured. Please try again later.");
+            }
+
+        }
+
+    }
+
+    /**
+     * Refresh the actual grid with a newgrid
+     * @param newGrid
+     */
+    function refreshGrid(newGrid) {
+
+        gridContainer.innerHTML = newGrid;
+        grid = gridContainer.firstChild;
+
+        difficulty = grid.dataset.difficulty;
+        timeActive = grid.dataset.timeActive;
+        gridSize = grid.dataset.gridSize;
+        timeBetweenChange = parseInt(timeActive) + 1000;
+
+    }
+
+    /**
+     * Remove all active cell (usefull if a cell is active when the game is stopped)
+     */
+    function removeActiveCell() {
+        let activeCells = document.querySelectorAll(".cell.active");
+        for (let i = 0 ; i < activeCells.length ; i++) {
+            activeCells[i].classList.remove("active");
+        }
     }
 
 })();
