@@ -119,6 +119,11 @@ body,
 .wrapper .sidebar.mobile-browser.landscape .sidebar-content .menu:not(:first-child) {
   flex-flow: row;
 }
+.wrapper .sidebar.mobile-browser .sidebar-content .menu:first-child a:hover,
+.wrapper .sidebar.mobile-browser .sidebar-content .menu:first-child a:active {
+  background-color: #f4f5f9;
+  color: #333030;
+}
 .wrapper .sidebar.mobile-browser .sidebar-content .menu:last-child a:last-child {
   display: none;
 }
