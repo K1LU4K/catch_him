@@ -214,3 +214,6 @@ body,
   background-color: rgba(255, 196, 98, 0.8);
   cursor: pointer;
 }
+.wrapper .grid-container .grid .line .cell.win {
+  background-color: rgba(117, 215, 1, 0.7);
+}
