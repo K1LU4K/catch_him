@@ -10,6 +10,7 @@ class GridGenerator
     protected $cells;
     protected $difficulty;
     protected $time;
+    protected $availableGridSize = [8, 16, 32];
 
     public static $_instance;
 
@@ -36,7 +37,9 @@ class GridGenerator
     /**
      * Generate the html grid
      */
-    public function generate() {
+    public function generate($size = null) {
+
+        $grid = "";
 
         switch ($this->difficulty) {
 
@@ -62,33 +65,58 @@ class GridGenerator
 
         }
 
-        echo "<div class=\"grid\" data-difficulty=\"{$this->difficulty}\" data-grid-size=\"{$this->size}\" data-time-active=\"{$ms}\">";
+        $grid .= "<div class=\"grid\" data-difficulty=\"{$this->difficulty}\" data-grid-size=\"{$this->size}\" data-time-active=\"{$ms}\" data-available-grid-size=\"" . json_encode($this->availableGridSize) . "\">";
 
         for ($x = 0 ; $x < $this->size ; $x++) {
 
-            echo "<div class=\"line\" id=\"row{$x}\">";
+            $grid .= "<div class=\"line\" id=\"row{$x}\">";
 
             for ($y = 0 ; $y < $this->size ; $y++) {
 
                 $iCellId = ($this->size * $x) + $y;
 
-                echo "<div class=\"cell\" id=\"cell{$iCellId}\">";
-                echo "</div>";
+                $grid .= "<div class=\"cell\" id=\"cell{$iCellId}\">";
+                $grid .= "</div>";
 
             }
 
-            echo "</div>";
+            $grid .= "</div>";
 
         }
 
-        echo "</div>";
+        $grid .= "</div>";
+
+        if (! empty($_GET["ajax"])) {
+
+            $json = [
+                "sizeUrl" => $this->generateSizeUrl(),
+                "difficultyUrl" => $this->generateDifficultyUrl(),
+                "grid" => $grid,
+            ];
+
+            $json = json_encode($json);
+
+            echo $json;
+            return;
+
+        }
+
+        echo $grid;
 
     }
 
+    /**
+     * Generate url for size button
+     * @return string
+     */
     public function generateSizeUrl() {
         return (! empty($_GET["difficulty"])) ? "?difficulty=" . $_GET['difficulty'] . "&grid-size=" : "?grid-size=";
     }
 
+    /**
+     * Generate url for difficulty button
+     * @return string
+     */
     public function generateDifficultyUrl() {
         return (! empty($_GET["grid-size"])) ? "?grid-size=" . $_GET['grid-size'] . "&difficulty=" : "?difficulty=";
     }
@@ -112,7 +140,7 @@ class GridGenerator
      * @param int $size
      */
     public function setSize($size) {
-        $size = ($size != 8 && $size != 16 && $size != 32) ? 16 : $size ;
+        $size = (! in_array($size, $this->availableGridSize)) ? 16 : $size ;
         $this->size = $size;
         $this->cells = $this->size * $this->size;
     }

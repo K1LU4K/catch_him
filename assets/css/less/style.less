@@ -150,13 +150,30 @@ html,body,.wrapper {
             }
             
             .sidebar-content {
+
                 .menu {
+
+                    &:first-child {
+
+                        a {
+                            &:hover,&:active {
+                                background-color: #f4f5f9;
+                                color: #333030;
+                            }
+                        }
+
+                    }
+
                     &:last-child {
+
                         a:last-child {
                             display: none;
                         }
+
                     }
+
                 }
+
             }
 
         }
