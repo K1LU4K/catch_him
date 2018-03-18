@@ -188,6 +188,10 @@ body,
   width: 95vw;
   height: 95vw;
 }
+.wrapper .grid-container.portrait .grid {
+  width: 75vw;
+  height: 75vw;
+}
 .wrapper .grid-container .grid {
   margin: auto;
   width: 95vh;

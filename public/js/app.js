@@ -5,6 +5,12 @@ window.mobileAndTabletcheck = function() {
 };
 
 (function () {
+
+    // Variable for event
+    let isSetOrientationEvent = false,
+        isSetSidebarEvent = false,
+        isSetStyleEvent = false;
+
     // Variable for sidebar button
     let start = document.getElementById("start-game"),
         toggleSidebar = document.getElementById("toggle-sidebar"),
@@ -39,9 +45,8 @@ window.mobileAndTabletcheck = function() {
 
     start.addEventListener("click", startGameEvent, { once: true });
 
-    // Event and function for mobile style
-    addMobileStyleEvent();
-    window.addEventListener("resize", addMobileStyleEvent);
+    // Event for change style in function of screen size
+    changeStyleEvent();
 
     for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
         difficultyButtons[i].addEventListener("click", changeDifficultyEvent);
@@ -58,18 +63,16 @@ window.mobileAndTabletcheck = function() {
     function startGameEvent(event) {
         event.preventDefault();
 
-        winCell = document.querySelector(".win");
-        if (winCell) {
-            winCell.classList.remove("win");
-        }
+        cleanGrid();
 
-        this.innerText = "Stop ?";
-        this.addEventListener("click", stopGameEvent, { once: true });
-
-        if (mobileAndTabletcheck()) {
+        // If mobile style is active, close sidebar
+        if (gridContainer.classList.contains("mobile-browser")) {
             toggleSidebar.classList.toggle("open");
             sidebar.classList.toggle("display");
         }
+
+        start.innerText = "Stop ?";
+        start.addEventListener("click", stopGameEvent, { once: true });
 
         /**
          * Interval for changing winnable cell change
@@ -117,6 +120,16 @@ window.mobileAndTabletcheck = function() {
 
         xhr.send();
 
+    }
+
+    /**
+     * Remove all win cells
+     */
+    function cleanGrid() {
+        winCell = document.querySelector(".win");
+        if (winCell) {
+            winCell.classList.remove("win");
+        }
     }
 
     /**
@@ -195,26 +208,49 @@ window.mobileAndTabletcheck = function() {
     }
 
     /**
-     * Toggle mobil style and check orientation device for the grid appereance
+     * Toggle mobile style and check orientation device for the grid appereance
      */
-    function addMobileStyleEvent() {
-        if (mobileAndTabletcheck()) {
+    function changeStyleEvent() {
+        toggleOrientationEvent();
+        toggleMobileStyle();
 
-            toggleOrientationEvent();
-            window.addEventListener("deviceorientation", toggleOrientationEvent);
+        if (! isSetStyleEvent) {
+            window.addEventListener("resize", changeStyleEvent);
+            isSetStyleEvent = true;
+        }
 
-            toggleSidebar.addEventListener("click", toggleSidebarEvent);
+    }
+
+    /**
+     * Toggle mobile style
+     */
+    function toggleMobileStyle() {
+
+        if (mobileAndTabletcheck() || window.innerWidth < 1000) {
 
             sidebar.classList.add("mobile-browser");
             gridContainer.classList.add("mobile-browser");
             toggleSidebarContainer.classList.remove("computer");
 
+            if (! isSetSidebarEvent) {
+                toggleSidebar.addEventListener("click", toggleSidebarEvent);
+                isSetSidebarEvent = true;
+            }
+
         }
         else {
+
             sidebar.classList.remove("mobile-browser");
             gridContainer.classList.remove("mobile-browser");
             toggleSidebarContainer.classList.add("computer");
+
+            if (isSetSidebarEvent) {
+                toggleSidebar.removeEventListener("click", toggleSidebarEvent);
+                isSetSidebarEvent = false;
+            }
+
         }
+
     }
 
     /**
@@ -232,13 +268,18 @@ window.mobileAndTabletcheck = function() {
      */
     function toggleOrientationEvent() {
 
-        if (window.innerHeight > window.innerWidth) {
+        if (window.innerHeight > window.innerWidth || gridContainer.clientHeight > gridContainer.clientWidth) {
             gridContainer.classList.add("portrait");
             sidebar.classList.remove("landscape");
         }
         else {
             gridContainer.classList.remove("portrait");
             sidebar.classList.add("landscape");
+        }
+
+        if (mobileAndTabletcheck() && ! isSetOrientationEvent) {
+            window.addEventListener("deviceorientation", toggleOrientationEvent);
+            isSetOrientationEvent = true;
         }
 
     }
