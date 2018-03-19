@@ -31,7 +31,7 @@ window.mobileAndTabletcheck = function() {
         gridSize = grid.dataset.gridSize,
         timeActive = grid.dataset.timeActive,
         timeBetweenChange = parseInt(timeActive) + 1000,
-        availableGridSize = JSON.parse(grid.dataset.availableGridSize);
+        availableGridSize = JSON.parse(grid.dataset.gridSizeAvailable);
 
     // Variables for cell and win cell
     let cell,
@@ -80,7 +80,9 @@ window.mobileAndTabletcheck = function() {
          */
         changeCell = setInterval(function () {
 
-            xhr.open("GET", "?difficulty=" + encodeURIComponent(difficulty) + "&grid-size=" + encodeURIComponent(gridSize) + "&ajax=true&cell=change");
+            url = "?difficulty=" + encodeURIComponent(difficulty) + "&grid-size=" + encodeURIComponent(gridSize) + "&ajax=true&cell=change";
+
+            xhr.open("GET", url);
             xhr.onload = setRandomCellResponse;
             xhr.send();
 
@@ -139,9 +141,11 @@ window.mobileAndTabletcheck = function() {
 
         if (xhr.readyState == XMLHttpRequest.DONE) {
 
+            let response = JSON.parse(xhr.responseText);
+
             if (xhr.status === 200) {
 
-                cellId = "cell" + xhr.responseText;
+                cellId = "cell" + response.cellId;
                 cell = document.getElementById(cellId);
 
                 cell.classList.add("active");
@@ -176,6 +180,8 @@ window.mobileAndTabletcheck = function() {
 
         if (xhr.readyState == XMLHttpRequest.DONE) {
 
+            let response = JSON.parse(xhr.responseText);
+
             if (xhr.status === 200) {
 
                 cell.removeEventListener("mousedown", makeWinnableEvent);
@@ -188,7 +194,7 @@ window.mobileAndTabletcheck = function() {
                 cell.classList.remove("active");
                 cell.classList.add("win");
 
-                alert(xhr.responseText);
+                alert(response.success);
 
                 clearInterval(changeCell);
                 clearTimeout(makeCellDisappear);
@@ -196,7 +202,7 @@ window.mobileAndTabletcheck = function() {
             }
             else {
 
-                alert('Une erreur est survenu, sorry.');
+                alert(response.error);
 
                 clearInterval(changeCell);
                 clearTimeout(makeCellDisappear);
@@ -328,9 +334,10 @@ window.mobileAndTabletcheck = function() {
 
         if (xhr.readyState === XMLHttpRequest.DONE) {
 
+            let response = JSON.parse(xhr.responseText);
+
             if (xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText),
-                    activeButton = document.querySelector(activeButtonSelector);
+                let activeButton = document.querySelector(activeButtonSelector);
 
                 activeButton.classList.remove("active");
                 thisButton.classList.add("active");
@@ -339,12 +346,12 @@ window.mobileAndTabletcheck = function() {
 
                 if (activeButtonSelector.match("difficulty")) {
                     for (let i = 0 ; i < nbrGridSizeButtons ; i++) {
-                        gridSizeButtons[i].setAttribute("href", response.sizeUrl + availableGridSize[i]);
+                        gridSizeButtons[i].setAttribute("href", "?difficulty=" + response.difficulty + "&grid-size=" + availableGridSize[i]);
                     }
                 }
                 else {
                     for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
-                        difficultyButtons[i].setAttribute("href", response.difficultyUrl + (i + 1));
+                        difficultyButtons[i].setAttribute("href", "?grid-size=" + response.size + "&difficulty=" + (i + 1));
                     }
                 }
 
