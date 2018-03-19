@@ -1,17 +1,23 @@
 html,
 body,
 .wrapper {
-  height: 100vh;
   width: 100vw;
+}
+html,
+body,
+.wrapper,
+html .sidebar,
+body .sidebar,
+.wrapper .sidebar,
+html .grid-container,
+body .grid-container,
+.wrapper .grid-container {
+  height: 100vh;
 }
 .wrapper {
   display: flex;
-  background-color: #1F2124;
+  background-color: #1f2124;
   position: relative;
-}
-.wrapper .sidebar,
-.wrapper .grid-container {
-  height: 100vh;
 }
 .wrapper .toggle-sidebar-container {
   position: absolute;
@@ -92,7 +98,7 @@ body,
 .wrapper .sidebar {
   background-color: #333030;
   width: 20%;
-  border-right: 2px solid #F17F42;
+  border-right: 2px solid #f17f42;
 }
 .wrapper .sidebar.mobile-browser {
   width: 100%;
@@ -123,9 +129,6 @@ body,
 .wrapper .sidebar.mobile-browser .sidebar-content .menu:first-child a:active {
   background-color: #f4f5f9;
   color: #333030;
-}
-.wrapper .sidebar.mobile-browser .sidebar-content .menu:last-child a:last-child {
-  display: none;
 }
 .wrapper .sidebar .sidebar-content {
   padding: 5% 2em;
@@ -167,15 +170,10 @@ body,
   -o-transition: color 0.1s, background-color 0.1s;
   transition: color 0.1s, background-color 0.1s;
 }
-.wrapper .sidebar .sidebar-content .menu a.disable,
-.wrapper .sidebar .sidebar-content .menu a.disable:hover {
-  color: #77786e;
-  background-color: #C5C6B6;
-}
 .wrapper .sidebar .sidebar-content .menu a:hover,
 .wrapper .sidebar .sidebar-content .menu a.active {
-  color: white;
-  background-color: #F17F42;
+  color: #f4f5f9;
+  background-color: #f17f42;
 }
 .wrapper .grid-container {
   display: flex;
@@ -198,26 +196,21 @@ body,
   height: 95vh;
   display: table;
   border-radius: 5px;
-  border: 2px solid #383A3F;
-  background-color: #383A3F;
+  border: 2px solid #383a3f;
+  background-color: #383a3f;
 }
 .wrapper .grid-container .grid .line {
   display: table-row;
-  border-bottom: 3px solid #383A3F;
-}
-.wrapper .grid-container .grid .line:last-child {
-  border-bottom: none;
 }
 .wrapper .grid-container .grid .line .cell {
   display: table-cell;
   border: 2px solid #383a3f;
-  border-radius: 5px;
-  background-color: #1F2124;
-  -webkit-transition: color 50ms;
-  -moz-transition: color 50ms;
-  -ms-transition: color 50ms;
-  -o-transition: color 50ms;
-  transition: color 50ms;
+  background-color: #1f2124;
+  -webkit-transition: background-color 50ms;
+  -moz-transition: background-color 50ms;
+  -ms-transition: background-color 50ms;
+  -o-transition: background-color 50ms;
+  transition: background-color 50ms;
 }
 .wrapper .grid-container .grid .line .cell.active {
   background-color: rgba(255, 196, 98, 0.8);
