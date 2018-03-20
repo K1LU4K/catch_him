@@ -11,6 +11,17 @@ window.mobileAndTabletcheck = function() {
         isSetSidebarEvent = false,
         isSetStyleEvent = false;
 
+    /**
+     * Variables for timeout and interval
+     *
+     * timeoutWinContainer = timeout for remove forward class of .win-container
+     * timeoutActiveCell = timeout for remove the active cell
+     * timeoutCellWinnable =
+     */
+    let timeoutWinContainer,
+        timeoutActiveCell,
+        intervalChangeCell;
+
     // Variable for sidebar button
     let start = document.getElementById("start-game"),
         toggleSidebar = document.getElementById("toggle-sidebar"),
@@ -30,24 +41,35 @@ window.mobileAndTabletcheck = function() {
         difficulty = grid.dataset.difficulty,
         gridSize = grid.dataset.gridSize,
         timeActive = grid.dataset.timeActive,
-        timeBetweenChange = parseInt(timeActive) + 1000,
+        timeBetweenChange = parseInt(timeActive) + 500,
         availableGridSize = JSON.parse(grid.dataset.gridSizeAvailable);
 
-    // Variables for cell and win cell
-    let cell,
-        winCell,
-        cellId,
-        changeCell,
-        makeCellDisappear,
-        TimeoutCellWinnable;
+    /**
+     * Variables for cell and win cell
+     *
+     * cellId = id send from php for the active cell
+     * wonCell = cell which clicked in time by user
+     * cell = cell active during timActive
+     */
+    let cellId,
+        wonCell,
+        cell;
+
+    let winContainer = document.querySelector(".win-container"),
+        winScreen = document.querySelector(".win-screen"),
+        score,
+        replay,
+        canReplaying = false,
+        hideScoreTime;
 
     let xhr = new XMLHttpRequest();
-
-    start.addEventListener("click", startGameEvent, { once: true });
 
     // Event for change style in function of screen size
     changeStyleEvent();
 
+    start.addEventListener("click", startGameEvent, { once: true });
+
+    // Add an event for each difficulty and size button
     for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
         difficultyButtons[i].addEventListener("click", changeDifficultyEvent);
     }
@@ -63,12 +85,19 @@ window.mobileAndTabletcheck = function() {
     function startGameEvent(event) {
         event.preventDefault();
 
+        canReplaying = false;
         cleanGrid();
 
         // If mobile style is active, close sidebar
-        if (gridContainer.classList.contains("mobile-browser")) {
+        if (gridContainer.classList.contains("mobile-browser") && toggleSidebar.classList.contains("open")) {
             toggleSidebar.classList.toggle("open");
             sidebar.classList.toggle("display");
+        }
+
+        if (winContainer && winContainer.classList.contains("display")) {
+            winContainer = document.querySelector(".win-container");
+            winScreen = document.querySelector(".win-screen");
+            hideVictoryScreenEvent();
         }
 
         start.innerText = "Stop ?";
@@ -78,7 +107,7 @@ window.mobileAndTabletcheck = function() {
          * Interval for changing winnable cell change
          * @type {number}
          */
-        changeCell = setInterval(function () {
+        intervalChangeCell = setInterval(function () {
 
             url = "?difficulty=" + encodeURIComponent(difficulty) + "&grid-size=" + encodeURIComponent(gridSize) + "&ajax=true&cell=change";
 
@@ -101,9 +130,8 @@ window.mobileAndTabletcheck = function() {
         start.innerText = "Play ?";
         start.addEventListener("click", startGameEvent, { once: true });
 
-        clearInterval(changeCell);
-        clearTimeout(makeCellDisappear);
-        clearTimeout(TimeoutCellWinnable);
+        clearInterval(intervalChangeCell);
+        clearTimeout(timeoutActiveCell);
 
     }
 
@@ -114,7 +142,8 @@ window.mobileAndTabletcheck = function() {
     function makeWinnableEvent(event) {
         event.preventDefault();
 
-        var clickedCellId = cell.id;
+        let clickedCellId = cell.id,
+            isWon = false;
 
         xhr.open("GET", "?ajax=true&cell=isWinner&cellId=" + encodeURIComponent(clickedCellId));
 
@@ -128,9 +157,9 @@ window.mobileAndTabletcheck = function() {
      * Remove all win cells
      */
     function cleanGrid() {
-        winCell = document.querySelector(".win");
-        if (winCell) {
-            winCell.classList.remove("win");
+        wonCell = document.querySelector(".win");
+        if (wonCell) {
+            wonCell.classList.remove("win");
         }
     }
 
@@ -150,23 +179,20 @@ window.mobileAndTabletcheck = function() {
 
                 cell.classList.add("active");
 
-                // Timeout to disable winnable cell
-                makeCellDisappear = setTimeout(function () {
-                    cell.classList.remove('active');
-                    clearTimeout(makeCellDisappear);
-                }, timeActive);
-
                 // Add click event to make the cell winnable
                 cell.addEventListener("mousedown", makeWinnableEvent);
-                TimeoutCellWinnable = setTimeout(function () {
+
+                // Timeout to disable winnable cell
+                timeoutActiveCell = setTimeout(function () {
                     cell.removeEventListener("mousedown", makeWinnableEvent);
-                    clearTimeout(TimeoutCellWinnable);
+                    cell.classList.remove('active');
+                    clearTimeout(timeoutActiveCell);
                 }, timeActive);
 
             }
             else {
                 alert('Une erreur est survenu, sorry.');
-                clearInterval(changeCell);
+                clearInterval(intervalChangeCell);
             }
 
         }
@@ -184,29 +210,50 @@ window.mobileAndTabletcheck = function() {
 
             if (xhr.status === 200) {
 
-                cell.removeEventListener("mousedown", makeWinnableEvent);
+                if (response.success) {
 
-                start.innerText = "Play ?";
+                    // Set win screen variables
+                    winContainer = document.querySelector(".win-container");
+                    winScreen = document.querySelector(".win-screen");
+                    score = document.getElementById("light-appeared");
+                    replay = document.getElementById("replay");
+                    hideScoreTime = winContainer.dataset.animationTime;
 
-                start.removeEventListener("click", stopGameEvent);
-                start.addEventListener("click", startGameEvent, { once:true });
+                    cell.removeEventListener("mousedown", makeWinnableEvent);
 
-                cell.classList.remove("active");
-                cell.classList.add("win");
+                    // Change the stop button in replay button
+                    start.innerText = "Replay ?";
+                    start.removeEventListener("click", stopGameEvent);
+                    start.addEventListener("click", startGameEvent, { once:true });
 
-                alert(response.success);
+                    // Display win screen
+                    winContainer.classList.add("forward");
+                    winContainer.classList.add("display");
+                    winScreen.classList.add("animate");
 
-                clearInterval(changeCell);
-                clearTimeout(makeCellDisappear);
-                clearTimeout(TimeoutCellWinnable);
+                    winContainer.addEventListener("click", hideVictoryScreenEvent, { once:true });
+
+                    // Display how many times the light was appeared and make the replay button on win screen
+                    canReplaying = true;
+                    score.innerText = response.nbrAppeared;
+                    replay.addEventListener("click", startGameEvent, { once:true });
+
+                    // Show the winning cell
+                    cell.classList.remove("active");
+                    cell.classList.add("win");
+
+                    clearInterval(intervalChangeCell);
+                    clearTimeout(timeoutActiveCell);
+
+                }
+
             }
             else {
 
                 alert(response.error);
 
-                clearInterval(changeCell);
-                clearTimeout(makeCellDisappear);
-                clearTimeout(TimeoutCellWinnable);
+                clearInterval(intervalChangeCell);
+                clearTimeout(timeoutActiveCell);
             }
 
         }
@@ -224,6 +271,21 @@ window.mobileAndTabletcheck = function() {
             window.addEventListener("resize", changeStyleEvent);
             isSetStyleEvent = true;
         }
+
+    }
+
+    function hideVictoryScreenEvent(event = null) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        winScreen.classList.remove("animate");
+        winContainer.classList.remove("display");
+
+        timeoutWinContainer = setTimeout(function () {
+            winContainer.classList.remove("forward");
+            clearTimeout(timeoutWinContainer);
+        }, hideScoreTime);
 
     }
 
@@ -294,7 +356,12 @@ window.mobileAndTabletcheck = function() {
      * Function for change difficulty event
      */
     function changeDifficultyEvent(event) {
-        stopGameEvent(event);
+        if (! canReplaying) {
+            stopGameEvent(event);
+        }
+        else {
+            event.preventDefault();
+        }
 
         let thisButton = this;
 
@@ -312,7 +379,12 @@ window.mobileAndTabletcheck = function() {
      * Function for change grid-size event
      */
     function changeGridSizeEvent(event) {
-        stopGameEvent(event);
+        if (! canReplaying) {
+            stopGameEvent(event);
+        }
+        else {
+            event.preventDefault();
+        }
 
         let thisButton = this;
 
@@ -370,8 +442,9 @@ window.mobileAndTabletcheck = function() {
      */
     function refreshGrid(newGrid) {
 
-        gridContainer.innerHTML = newGrid;
-        grid = gridContainer.firstChild;
+        gridContainer.removeChild(grid);
+        gridContainer.innerHTML += newGrid;
+        grid = gridContainer.querySelector('.grid');
 
         difficulty = grid.dataset.difficulty;
         timeActive = grid.dataset.timeActive;

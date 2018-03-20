@@ -3,12 +3,14 @@
 namespace K1LU4K;
 
 
+use Detection\MobileDetect;
 use K1LU4K\Config\Config;
 
 class GridGenerator
 {
 
     protected $config;
+    protected $detector;
 
     protected $size;
     protected $cells;
@@ -24,6 +26,8 @@ class GridGenerator
      */
     public function __construct() {
         $this->config = Config::getInstance();
+
+        $this->detector = new \Mobile_Detect();
 
         $this->difficultiesAvailable = $this->config->getParam("difficulties");
         $this->gridSizeAvailable= $this->config->getParam("grid_sizes");
@@ -44,7 +48,7 @@ class GridGenerator
      */
     public function generate() {
 
-        if ($this->config->isMobile()) {
+        if ($this->detector->isMobile() || $this->detector->isTablet()) {
             $gridSizeAvailable = $this->gridSizeAvailable["mobile"];
             unset($gridSizeAvailable["default"]);
         }
@@ -59,6 +63,8 @@ class GridGenerator
             "size" => $this->size,
             "difficulty" => $this->difficulty,
         ];
+
+        unset($_SESSION["nbr_appeared"]);
 
         ob_start();
         require "../ressources/views/grid.php";
@@ -117,7 +123,7 @@ class GridGenerator
 
         if (! empty($_GET["difficulty"])) {
 
-            if ($this->config->isMobile()) {
+            if ($this->detector->isMobile() || $this->detector->isTablet()) {
                 $difficulty = (array_key_exists(intval($_GET["difficulty"]), $this->difficultiesAvailable["mobile"])) ? $_GET["difficulty"] : $this->difficultiesAvailable["mobile"]["default"] ;
             }
             else {
@@ -141,7 +147,7 @@ class GridGenerator
 
         if (! empty($_GET["grid-size"])) {
 
-            if ($this->config->isMobile()) {
+            if ($this->detector->isMobile() || $this->detector->isTablet()) {
                 $size = (in_array($_GET["grid-size"], $this->gridSizeAvailable["mobile"])) ? $_GET["grid-size"] : $this->gridSizeAvailable["mobile"]["default"] ;
             }
             else {
@@ -150,7 +156,7 @@ class GridGenerator
 
         }
         else {
-            if ($this->config->isMobile()) {
+            if ($this->detector->isMobile() || $this->detector->isTablet()) {
                 $size = $this->gridSizeAvailable["mobile"]["default"];
             }
             else {
@@ -164,7 +170,7 @@ class GridGenerator
 
     public function setTime() {
 
-        if ($this->config->isMobile()) {
+        if ($this->detector->isMobile() || $this->detector->isTablet()) {
             $time = $this->difficultiesAvailable["mobile"][$this->difficulty]["time"];
             for ($i = 1 ; $i < count($this->difficultiesAvailable["mobile"]) ; $i++) {
                 if ($this->difficultiesAvailable["mobile"][$i]["time"] == $time) {
@@ -190,7 +196,7 @@ class GridGenerator
     }
 
     public function getAllSizes() {
-        if ($this->config->isMobile()) {
+        if ($this->detector->isMobile() || $this->detector->isTablet()) {
             $sizes = $this->gridSizeAvailable["mobile"];
             unset($sizes["default"]);
             return $sizes;
@@ -210,7 +216,7 @@ class GridGenerator
     }
 
     public function getAllDifficulties() {
-        if ($this->config->isMobile()) {
+        if ($this->detector->isMobile() || $this->detector->isTablet()) {
             $difficulties = $this->difficultiesAvailable["mobile"];
             unset($difficulties["default"]);
             return $difficulties;

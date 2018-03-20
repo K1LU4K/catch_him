@@ -7,10 +7,10 @@
 return [
 
     "mobile" => [
-        2,
         4,
         8,
-        "default" => 4,
+        16,
+        "default" => 8,
     ],
 
     "computer" => [

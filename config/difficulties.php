@@ -17,7 +17,7 @@ return [
         ],
         3 => [
             "name" => "Hard",
-            "time" => 300,
+            "time" => 350,
         ],
 
         // To set default value, precise index of the value wanted

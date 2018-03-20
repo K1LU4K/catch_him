@@ -107,6 +107,7 @@ body .grid-container,
   top: -100vh;
   left: 0;
   right: 0;
+  z-index: 8;
   -webkit-transition: top 0.2s;
   -moz-transition: top 0.2s;
   -ms-transition: top 0.2s;
@@ -206,11 +207,6 @@ body .grid-container,
   display: table-cell;
   border: 2px solid #383a3f;
   background-color: #1f2124;
-  -webkit-transition: background-color 50ms;
-  -moz-transition: background-color 50ms;
-  -ms-transition: background-color 50ms;
-  -o-transition: background-color 50ms;
-  transition: background-color 50ms;
 }
 .wrapper .grid-container .grid .line .cell.active {
   background-color: rgba(255, 196, 98, 0.8);
@@ -218,4 +214,100 @@ body .grid-container,
 }
 .wrapper .grid-container .grid .line .cell.win {
   background-color: rgba(117, 215, 1, 0.7);
+}
+.grid-container {
+  position: relative;
+}
+.grid-container .win-container {
+  background-color: rgba(0, 0, 0, 0);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -200vh;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: background-color 0.2s;
+  -moz-transition: background-color 0.2s;
+  -ms-transition: background-color 0.2s;
+  -o-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+.grid-container .win-container.display {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.grid-container .win-container.forward {
+  top: 0;
+  z-index: 7;
+}
+.grid-container .win-container * {
+  font-family: 'Montserrat', sans-serif;
+}
+.grid-container .win-container .win-screen {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  padding: .8em;
+  min-height: 50%;
+  min-width: 50%;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 5px;
+  background-color: transparent;
+  -webkit-transition: background-color 0.2s, min-height 0.2s, min-width 0.2s, opacity 0.2s, transform 0.2s;
+  -moz-transition: background-color 0.2s, min-height 0.2s, min-width 0.2s, opacity 0.2s, transform 0.2s;
+  -ms-transition: background-color 0.2s, min-height 0.2s, min-width 0.2s, opacity 0.2s, transform 0.2s;
+  -o-transition: background-color 0.2s, min-height 0.2s, min-width 0.2s, opacity 0.2s, transform 0.2s;
+  transition: background-color 0.2s, min-height 0.2s, min-width 0.2s, opacity 0.2s, transform 0.2s;
+  -webkit-transform: scale(0, 0);
+  -moz-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  -o-transform: scale(0, 0);
+  transform: scale(0, 0);
+}
+.grid-container .win-container .win-screen.animate {
+  -webkit-transform: scale(1, 1);
+  -moz-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+  opacity: 1;
+  background-color: #333030;
+}
+.grid-container .win-container .win-screen .win-text,
+.grid-container .win-container .win-screen .score {
+  color: #f4f5f9;
+  text-align: center;
+}
+.grid-container .win-container .win-screen .win-text {
+  font-size: 1.6em;
+}
+.grid-container .win-container .win-screen .score {
+  font-size: 1.5em;
+}
+.grid-container .win-container .win-screen .replay-container {
+  text-align: center;
+}
+.grid-container .win-container .win-screen .replay-container .replay-button {
+  display: inline-block;
+  text-align: center;
+  padding: .7rem 1rem;
+  margin: .5em;
+  background-color: #f4f5f9;
+  color: #333030;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1.2em;
+  -webkit-transition: color 0.1s, background-color 0.1s;
+  -moz-transition: color 0.1s, background-color 0.1s;
+  -ms-transition: color 0.1s, background-color 0.1s;
+  -o-transition: color 0.1s, background-color 0.1s;
+  transition: color 0.1s, background-color 0.1s;
+}
+.grid-container .win-container .win-screen .replay-container .replay-button:hover {
+  color: #f4f5f9;
+  background-color: #f17f42;
 }

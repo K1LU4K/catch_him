@@ -49,7 +49,23 @@ if (! empty($_GET['ajax'])) {
 
 <!-- Generate grid -->
 <div class="grid-container">
+
+    <div class="win-container" data-animation-time="200">
+
+        <div class="win-screen">
+            <div class="win-text"><h1>It's won !</h1></div>
+            <div class="score">
+                <p>The light appeared <span id="light-appeared"></span> time(s)</br>before you're catch him !</p>
+            </div>
+            <div class="replay-container">
+                <a class="replay-button" id="replay" href="">Replay ?</a>
+            </div>
+        </div>
+
+    </div>
+
     <?php $oGridGen->generate(); ?>
+
 </div>
 
 <?php include "./parts/footer.php" ?>
