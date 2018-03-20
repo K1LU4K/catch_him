@@ -1,0 +1,21 @@
+@import "./incs/colors.less";
+
+html,body,.wrapper {
+    &,.sidebar,.grid-container {
+        height: 100vh;
+    }
+    width: 100vw;
+}
+
+.wrapper {
+    display: flex;
+    background-color: @background-site;
+    position: relative;
+
+    @import "./incs/toggle-sidebar-button.less";
+
+}
+
+@import "./sidebar.less";
+@import "./grid.less";
+@import "./win-screen.less";

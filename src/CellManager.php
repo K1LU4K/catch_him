@@ -20,21 +20,40 @@ class CellManager
     public function isActiveCell() {
         if (! empty($_SESSION["timeout"]) && ! empty($_SESSION['cell'])) {
 
+            $tries = $_SESSION["nbr_appeared"];
+
             if (! isset($_GET["cellId"])) {
                 header("HTTP/1.1 404 Page Not Found");
                 echo "Ne fais pas n'importe quoi voyons.";
                 return;
             }
 
-            if (time() <= $_SESSION['timeout'] && $_SESSION["cell"] == $_GET["cellId"]) {
-                echo "you win !";
+            if ((microtime(true)) <= $_SESSION['timeout'] && $_SESSION["cell"] == $_GET["cellId"]) {
+                unset($_SESSION["nbr_appeared"]);
+                $win = true;
+            }
+            else {
+                $win = false;
+            }
+
+            if (! empty($_GET["ajax"])) {
+                $json = [
+                    "success" => $win,
+                    "nbrAppeared" => $tries,
+                ];
+                $json = json_encode($json);
+                echo $json;
                 return;
             }
 
         }
         else {
             header("HTTP/1.1 404 Page Not Found");
-            echo "An error is occured";
+            $json = [
+                "error" => "An error is occured.",
+            ];
+            $json = json_encode($json);
+            echo $json;
             return;
         }
     }
@@ -42,12 +61,28 @@ class CellManager
     /**
      * Choose a random cell to active
      */
-    public function activeRandomCell() {
+    public function returnActiveCell() {
 
-        $iIdCell = rand(0, $this->oGrid->getCells() - 1);
+        $iIdCell = $this->getRandomCell();
+        $serverDelay = 1;
 
-        $_SESSION['timeout'] = time() + $this->oGrid->getTime();
+        $_SESSION['timeout'] = microtime(true) + ($this->oGrid->getTime() + $serverDelay);
         $_SESSION['cell'] = "cell" . $iIdCell;
+        if (! empty($_SESSION["nbr_appeared"])) {
+            $_SESSION["nbr_appeared"]++;
+        }
+        else {
+            $_SESSION["nbr_appeared"] = 1;
+        }
+
+        if (! empty($_GET["ajax"])) {
+            $json = [
+                "cellId" => $iIdCell,
+            ];
+            $json = json_encode($json);
+            echo $json;
+            return;
+        }
 
         echo $iIdCell;
         return;
@@ -60,6 +95,14 @@ class CellManager
         header("HTTP/1.0 404 Page Not Found");
         echo "L'URL demander n'existe pas";
         return;
+    }
+
+    /**
+     * Return a random cell
+     * @return int
+     */
+    public function getRandomCell() {
+        return rand(0, $this->oGrid->getCells() - 1);
     }
 
 }

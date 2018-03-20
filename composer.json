@@ -12,5 +12,7 @@
             "K1LU4K\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "mobiledetect/mobiledetectlib": "^2.8"
+    }
 }

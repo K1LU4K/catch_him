@@ -1,0 +1,128 @@
+.wrapper {
+
+    .sidebar {
+        background-color: @background-sidebar;
+        width: 20%;
+        border-right: 2px solid @border-sidebar;
+
+
+        &.mobile-browser {
+            width: 100%;
+            border: none;
+            position: absolute;
+            top: -100vh; left: 0; right: 0;
+
+            z-index: 8;
+
+            -webkit-transition: top 0.2s;
+            -moz-transition: top 0.2s;
+            -ms-transition: top 0.2s;
+            -o-transition: top 0.2s;
+            transition: top 0.2s;
+
+            &.display {
+                top: 0;
+            }
+
+            &.landscape {
+                .sidebar-content {
+                    padding: 0;
+                    .menu {
+
+                        p {
+                            display: none;
+                        }
+
+                        &:not(:first-child) {
+                            flex-flow: row;
+                        }
+
+                    }
+                }
+            }
+
+            .sidebar-content {
+
+                .menu {
+
+                    &:first-child {
+
+                        a {
+                            &:hover,&:active {
+                                background-color: @input-sidebar;
+                                color: @text-input-sidebar;
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        .sidebar-content {
+            padding: 5% 2em;
+
+            height: 90%;
+
+
+            display: flex;
+            flex-flow: column;
+            justify-content: space-around;
+            align-items: center;
+
+            .menu {
+
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+
+                &:not(:first-child), &:not(:first-child) a {
+                    width: 90%;
+                }
+
+                * {
+                    font-family: 'Montserrat', sans-serif;
+                }
+
+                p,h1 {
+                    text-align: center;
+                    color: @text-sidebar;
+                }
+
+                a {
+                    text-align: center;
+
+                    padding: .7rem 1rem;
+                    margin: .5em;
+
+                    background-color: @input-sidebar;
+                    color: @text-input-sidebar;
+
+                    border-radius: 5px;
+
+                    text-decoration: none;
+
+                    font-size: 1.2em;
+
+                    -webkit-transition: color 0.1s, background-color 0.1s;
+                    -moz-transition: color 0.1s, background-color 0.1s;
+                    -ms-transition: color 0.1s, background-color 0.1s;
+                    -o-transition: color 0.1s, background-color 0.1s;
+                    transition: color 0.1s, background-color 0.1s;
+
+                    &:hover, &.active {
+                        color: @text-input-sidebar_hover;
+                        background-color: @input-sidebar_hover;
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+}

@@ -1,0 +1,67 @@
+.wrapper {
+
+    .grid-container {
+        display: flex;
+        width: 80%;
+
+        &.mobile-browser {
+            width: 100%;
+
+            &.portrait {
+                .grid {
+                    width: 95vw;
+                    height: 95vw;
+                }
+
+            }
+
+        }
+
+        &.portrait {
+            .grid {
+                width: 75vw;
+                height: 75vw;
+            }
+
+        }
+
+        .grid {
+            margin: auto;
+
+            width: 95vh;
+            height: 95vh;
+            display: table;
+
+            border-radius: 5px;
+            border: 2px solid @border-grid;
+
+            background-color: @border-grid;
+
+            .line {
+                display: table-row;
+
+                .cell {
+                    display: table-cell;
+
+                    border: 2px solid @border-grid;
+
+                    background-color: @background-cell;
+
+                    &.active {
+                        background-color: @background-cell-active;
+                        cursor: pointer;
+                    }
+
+                    &.win {
+                        background-color: @background-cell-win;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
