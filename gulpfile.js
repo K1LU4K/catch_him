@@ -18,7 +18,9 @@ gulp.task("default", function () {
 gulp.task("less", function () {
     return gulp.src("public/css/less/style.less")
         .pipe(plumber())
-        .pipe(less())
+        .pipe(less({
+            paths: ["public/css/less/", "public/css/less/incs/"]
+        }))
         .pipe(gulp.dest("public/css"));
 });
 
@@ -31,11 +33,16 @@ gulp.task("minifyCss", ["less"], function () {
         .pipe(gulp.dest("public/css/minify"));
 });
 
-gulp.task("concatCss", ["minifyCss"], function () {
+gulp.task("concatCss", ["cleanCss", "minifyCss"], function () {
     return gulp.src("public/css/minify/*.min.css")
         .pipe(concat("main.min.css"))
         .pipe(gulp.dest("public/css/dist"));
 });
+
+gulp.task("cleanCss", function () {
+    return gulp.src(["public/css/style.css", "public/css/dist/*", "public/css/minify/*"], { read: false })
+        .pipe(clean());
+})
 
 // Gulp part for compile js es6 to es5, uglify and concat all .min.js files
 gulp.task("compile", function () {
@@ -59,8 +66,13 @@ gulp.task("uglify", ["compile"], function (cb) {
     );
 });
 
-gulp.task("concatJs", ["uglify"], function () {
+gulp.task("concatJs", ["cleanJs", "uglify"], function () {
     return gulp.src("public/js/compress/*.min.js")
         .pipe(concat("main.min.js"))
         .pipe(gulp.dest("public/js/dist"));
+});
+
+gulp.task("cleanJs", function () {
+   return gulp.src(["public/js/es5/*", "public/js/compress/*", "public/js/dist/*"])
+       .pipe(clean());
 });
