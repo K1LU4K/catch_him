@@ -1,7 +1,7 @@
 
 </div>
 
-<script type="text/javascript" src="./js/app.js"></script>
+<script type="text/javascript" src="./js/dist/main.min.js"></script>
 
 </body>
 </html>
