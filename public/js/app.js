@@ -333,10 +333,18 @@
         if (window.innerHeight > window.innerWidth || gridContainer.clientHeight > gridContainer.clientWidth) {
             gridContainer.classList.add("portrait");
             sidebar.classList.remove("landscape");
+
+            grid.style.height = (gridContainer.clientWidth * ( 95 / 100 )) + "px";
+            grid.style.width = (gridContainer.clientWidth * ( 95 / 100 )) + "px";
+
         }
         else {
             gridContainer.classList.remove("portrait");
             sidebar.classList.add("landscape");
+
+            grid.style.width = (gridContainer.clientHeight * ( 95 / 100 )) + "px";
+            grid.style.height = (gridContainer.clientHeight * ( 95 / 100 )) + "px";
+
         }
 
         if (mobileAndTabletcheck() && ! isSetOrientationEvent) {
@@ -444,6 +452,8 @@
         timeActive = grid.dataset.timeActive;
         gridSize = grid.dataset.gridSize;
         timeBetweenChange = parseInt(timeActive) + 1000;
+
+        toggleOrientationEvent();
 
     }
 
