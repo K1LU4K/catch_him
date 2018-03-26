@@ -193,7 +193,7 @@
 
                 // Timeout to disable winnable cell
                 timeoutActiveCell = setTimeout(function () {
-                    cell.removeEventListener("mousedown", makeWinnableEvent);
+                    cell.removeEventListener("click", makeWinnableEvent);
                     cell.classList.remove('active');
                     clearTimeout(timeoutActiveCell);
                 }, timeActive);
