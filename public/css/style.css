@@ -47,6 +47,9 @@ body .grid-container,
   background-color: #1f2124;
   position: relative;
 }
+.wrapper * {
+  font-family: 'Montserrat', sans-serif;
+}
 .wrapper .toggle-sidebar-container {
   position: absolute;
   top: 1em;
@@ -175,9 +178,6 @@ body .grid-container,
 .wrapper .sidebar .sidebar-content .menu:not(:first-child),
 .wrapper .sidebar .sidebar-content .menu:not(:first-child) a {
   width: 90%;
-}
-.wrapper .sidebar .sidebar-content .menu * {
-  font-family: 'Montserrat', sans-serif;
 }
 .wrapper .sidebar .sidebar-content .menu p,
 .wrapper .sidebar .sidebar-content .menu h1 {
