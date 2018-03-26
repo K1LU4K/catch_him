@@ -57,6 +57,15 @@
 
             </div>
 
+            <div class="mentions">
+                <p>
+                    <small>
+                        Copyright © Gautier Dujarrier</br>
+                        <a id="mentions-button" href="mentions.php">Mentions Légal</a>
+                    </small>
+                </p>
+            </div>
+
         </div>
 
     </div>

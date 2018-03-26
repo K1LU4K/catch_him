@@ -63,9 +63,9 @@
         }
 
         .sidebar-content {
-            padding: 5% 2em;
+            padding: 0 2em;
 
-            height: 90%;
+            height: 100%;
 
 
             display: flex;
@@ -119,6 +119,22 @@
                     }
 
                 }
+            }
+
+            .mentions {
+                text-align: center;
+
+                &,a {
+                    color: @text-sidebar;
+                }
+
+                a {
+                    text-decoration: none;
+                    &:hover {
+                        color: @input-sidebar_hover;
+                    }
+                }
+
             }
 
         }

@@ -14,6 +14,7 @@
      */
     let timeoutWinContainer,
         timeoutActiveCell,
+        timeoutMentions,
         intervalChangeCell;
 
     // Variable for sidebar button
@@ -56,12 +57,20 @@
         canReplaying = false,
         hideScoreTime;
 
+    let mentionsContainer = document.querySelector(".mentions-container"),
+        mentions = mentionsContainer.querySelector(".mentions"),
+        mentionsButton = document.querySelector("#mentions-button"),
+        hideMentionsDelay = mentionsContainer.dataset.animationTime,
+        mentionsOpen = false;
+
     let xhr = new XMLHttpRequest();
 
     // Event for change style in function of screen size
     changeStyleEvent();
 
     start.addEventListener("click", startGameEvent, { once: true });
+
+    mentionsButton.addEventListener("click", toggleMentionsEvent);
 
     // Add an event for each difficulty and size button
     for (let i = 0 ; i < nbrDifficultyButtons ; i++) {
@@ -81,6 +90,10 @@
 
         canReplaying = false;
         cleanGrid();
+
+        if (mentionsOpen) {
+            toggleMentionsEvent(event, true);
+        }
 
         // If mobile style is active, close sidebar
         if (gridContainer.classList.contains("mobile-browser") && toggleSidebar.classList.contains("open")) {
@@ -365,6 +378,10 @@
             event.preventDefault();
         }
 
+        if (mentionsOpen) {
+            toggleMentionsEvent(event, true);
+        }
+
         let thisButton = this;
 
         url = this.getAttribute("href");
@@ -388,6 +405,10 @@
             event.preventDefault();
         }
 
+        if (mentionsOpen) {
+            toggleMentionsEvent(event, true);
+        }
+
         let thisButton = this;
 
         url = this.getAttribute("href");
@@ -398,6 +419,42 @@
 
         xhr.send();
 
+    }
+
+    /**
+     * Event for toggle legal information
+     * @param event
+     */
+    function toggleMentionsEvent(event, menuButton = false) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        mentionsContainer = document.querySelector(".mentions-container");
+        mentions = mentionsContainer.querySelector(".mentions");
+
+        if (! mentionsContainer.classList.contains("display")) {
+            mentionsOpen = true;
+
+            mentionsContainer.classList.add("forward");
+            mentionsContainer.classList.add("display");
+            mentions.classList.add("animate");
+
+            mentionsContainer.addEventListener("click", toggleMentionsEvent);
+        }
+        else if (event.target === mentionsButton || event.target === mentionsContainer || menuButton) {
+            mentionsOpen = false;
+
+            mentions.classList.remove("animate");
+            mentionsContainer.classList.remove("display");
+
+            timeoutMentions = setTimeout(function () {
+                mentionsContainer.classList.remove("forward");
+                clearTimeout(timeoutMentions);
+            }, hideMentionsDelay);
+
+            mentionsContainer.removeEventListener("click", toggleMentionsEvent);
+
+        }
     }
 
     /**
