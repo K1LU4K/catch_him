@@ -1,4 +1,5 @@
 @import "./incs/colors.less";
+@import "./incs/popup.less";
 
 html,body,.wrapper {
     &,.sidebar,.grid-container {
@@ -12,6 +13,10 @@ html,body,.wrapper {
     background-color: @background-site;
     position: relative;
 
+    * {
+        font-family: 'Montserrat', sans-serif;
+    }
+
     @import "./incs/toggle-sidebar-button.less";
 
 }
@@ -19,3 +24,4 @@ html,body,.wrapper {
 @import "./sidebar.less";
 @import "./grid.less";
 @import "./win-screen.less";
+@import "./mentions.less";

@@ -9,13 +9,13 @@ const gulp = require("gulp"),
     concat = require("gulp-concat"),
     plumber = require("gulp-plumber");
 
-gulp.task("default", function () {
+gulp.task("default", ["concatCss", "concatJs"], function () {
     gulp.watch("public/css/less/**/*", ["concatCss"]);
     gulp.watch(["public/js/*.js", "public/js/libs/*.js"], ["concatJs"]);
 });
 
 // Gulp part for compile less to css, minify css and concat all .min.css files
-gulp.task("less", function () {
+gulp.task("less", ["cleanCss"], function () {
     return gulp.src("public/css/less/style.less")
         .pipe(plumber())
         .pipe(less({
@@ -26,6 +26,7 @@ gulp.task("less", function () {
 
 gulp.task("minifyCss", ["less"], function () {
     return gulp.src("public/css/*.css")
+        .pipe(plumber())
         .pipe(minifyCss({ compatibility: 'ie8' }))
         .pipe(rename({
             suffix: ".min"
@@ -33,20 +34,22 @@ gulp.task("minifyCss", ["less"], function () {
         .pipe(gulp.dest("public/css/minify"));
 });
 
-gulp.task("concatCss", ["cleanCss", "minifyCss"], function () {
+gulp.task("concatCss", ["minifyCss"], function () {
     return gulp.src("public/css/minify/*.min.css")
+        .pipe(plumber())
         .pipe(concat("main.min.css"))
         .pipe(gulp.dest("public/css/dist"));
 });
 
 gulp.task("cleanCss", function () {
-    return gulp.src(["public/css/style.css", "public/css/dist/*", "public/css/minify/*"], { read: false })
+    return gulp.src(["public/css/style.css", "public/css/dist/**/*", "public/css/minify/**/*"], { read: false })
         .pipe(clean());
 })
 
 // Gulp part for compile js es6 to es5, uglify and concat all .min.js files
-gulp.task("compile", function () {
+gulp.task("compile", ["cleanJs"], function () {
     return gulp.src(["public/js/*.js", "public/js/libs/*.js"])
+        .pipe(plumber())
         .pipe(babel({
             presets: ["env"]
         }))
@@ -56,6 +59,7 @@ gulp.task("compile", function () {
 gulp.task("uglify", ["compile"], function (cb) {
     pump([
             gulp.src('public/js/es5/*.js'),
+            plumber(),
             uglify(),
             rename({
                 suffix: ".min"
@@ -66,8 +70,9 @@ gulp.task("uglify", ["compile"], function (cb) {
     );
 });
 
-gulp.task("concatJs", ["cleanJs", "uglify"], function () {
+gulp.task("concatJs", ["uglify"], function () {
     return gulp.src("public/js/compress/*.min.js")
+        .pipe(plumber())
         .pipe(concat("main.min.js"))
         .pipe(gulp.dest("public/js/dist"));
 });
