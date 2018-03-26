@@ -21,7 +21,6 @@
 }
 .popup.forward {
   top: 0;
-  z-index: 7;
 }
 .popup * {
   font-family: 'Montserrat', sans-serif;
@@ -279,7 +278,6 @@ body .grid-container,
 }
 .grid-container .win-container.forward {
   top: 0;
-  z-index: 7;
 }
 .grid-container .win-container * {
   font-family: 'Montserrat', sans-serif;
@@ -372,7 +370,6 @@ body .grid-container,
 }
 .grid-container .mentions-container.forward {
   top: 0;
-  z-index: 7;
 }
 .grid-container .mentions-container * {
   font-family: 'Montserrat', sans-serif;

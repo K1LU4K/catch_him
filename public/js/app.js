@@ -380,10 +380,6 @@
             event.preventDefault();
         }
 
-        if (mentionsOpen) {
-            toggleMentionsEvent(event, true);
-        }
-
         let thisButton = this;
 
         url = this.getAttribute("href");
@@ -407,10 +403,6 @@
             event.preventDefault();
         }
 
-        if (mentionsOpen) {
-            toggleMentionsEvent(event, true);
-        }
-
         let thisButton = this;
 
         url = this.getAttribute("href");
@@ -426,6 +418,7 @@
     /**
      * Event for toggle legal information
      * @param event
+     * @param menuButton
      */
     function toggleMentionsEvent(event, menuButton = false) {
         event.stopPropagation();
@@ -481,6 +474,10 @@
                 thisButton.classList.add("active");
 
                 refreshGrid(response.grid);
+
+                if (mentionsOpen) {
+                    toggleMentionsEvent(event, true);
+                }
 
                 if (activeButtonSelector.match("difficulty")) {
                     for (let i = 0 ; i < nbrGridSizeButtons ; i++) {
