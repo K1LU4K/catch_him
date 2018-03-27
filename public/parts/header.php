@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <meta name="application-name" content="Catch Him!">
+    <meta name="description" content="Catch Him! is a little game where you try to catch a light. You can set grid-size and difficulty.">
+    <meta name="keywords" content="catchhim,catch,him,catch-him,light,grid-size,difficulty,grid,gautier,dujarrier,gautierdujarrier">
+
+    <meta name="author" content="Gautier Dujarrier">
+    <meta name="creator" content="Gautier Dujarrier">
+
     <title>Catch Him</title>
 
     <link rel="icon" href="./favicon.ico">
